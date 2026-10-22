@@ -1,0 +1,18 @@
+:root {
+  font-family: "Roboto", sans-serif;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-paper: #ffffff;
+  --color-mist: #eef8fa;
+  --color-rust: #b94b0b;
+  --color-forest: #003322;
+  --color-ink: #101312;
+  --color-muted: #65716c;
+  --font-body: "Roboto", sans-serif;
+  --content-width: 1440px;
+}
