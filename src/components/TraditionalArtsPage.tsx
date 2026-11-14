@@ -1,40 +1,39 @@
-import ImageCollection, { type ImageCollectionItem } from "./ImageCollection";
+import { useEffect, useState } from "react";
+import ImageCollection from "./ImageCollection";
+import type { ImageCollectionItem } from "../data/galleryTypes";
+import {
+  traditionalArtCollections,
+  type TraditionalArtType,
+} from "../data/traditionalArt";
+import { fetchPublishedContent } from "../data/publicApi";
 
-const rangoliArt: ImageCollectionItem[] = [
-  {
-    title: "Festive Peacock Feather Floor Rangoli",
-    description:
-      "Elaborate symmetrical floor art featuring radiant peacock plumage, turquoise and magenta sand dyes, illuminated with festive clay oil lamps.",
-    image: "/images/traditional-arts/peacock-rangoli.jpg",
-    alt: "Festive peacock feather floor rangoli",
-  },
-  {
-    title: "Traditional Floral Mandala Rangoli",
-    description:
-      "Symmetrical sacred geometric mandala celebrating Indian welcoming rituals, layered with fresh marigolds and glowing brass lamps.",
-    image: "/images/traditional-arts/floral-mandala-rangoli.jpg",
-    alt: "Traditional floral mandala rangoli",
-  },
-];
-
-const mehandiArt: ImageCollectionItem[] = [
-  {
-    title: "Intricate Bridal Mehndi Adornment",
-    description:
-      "Detailed symmetrical paisley, peacock, and floral jaali patterns on palms and wrists with deep mahogany stains.",
-    image: "/images/traditional-arts/bridal-mehndi.jpg",
-    alt: "Intricate bridal mehndi design",
-  },
-  {
-    title: "Indo-Arabic Festive Henna Trail",
-    description:
-      "Modern flowing floral trail with shaded petals and delicate mandalas, perfect for festive events and weddings.",
-    image: "/images/traditional-arts/bridal-mehndi.jpg",
-    alt: "Flowing festive henna trail",
-  },
-];
+type TraditionalArtRecord = {
+  title: string;
+  description: string;
+  imageUrl: string;
+  imageAlt: string;
+  type: TraditionalArtType;
+  price?: number;
+};
 
 export default function TraditionalArtsPage() {
+  const [records, setRecords] = useState<TraditionalArtRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchPublishedContent<TraditionalArtRecord>("traditional-art-cards")
+      .then(setRecords)
+      .catch((requestError: unknown) => {
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : "Could not load traditional art.",
+        );
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <article className="editorial-page">
       <header className="editorial-intro">
@@ -42,27 +41,41 @@ export default function TraditionalArtsPage() {
       </header>
 
       <div className="editorial-content">
-        <ImageCollection
-          title="Rangoli Collection"
-          description="Elaborate symmetrical floor rangoli designs created for festivals, welcoming entrances, and celebratory occasions with organic powdered pigments and flower petals."
-          items={rangoliArt}
-          variant="filmstrip"
-        />
-        <ImageCollection
-          title="Mehandi Collection"
-          description="Handcrafted 100% natural organic henna pastes ensuring rich dark stains. Specializing in intricate bridal mehndi, Indo-Western patterns, and festive event bookings."
-          items={mehandiArt}
-          variant="filmstrip"
-        />
+        {error && <p className="gallery-status error" role="alert">{error}</p>}
+        {traditionalArtCollections.map((collection) => {
+          const items: ImageCollectionItem[] = records
+            .filter((record) => record.type === collection.type)
+            .map((record) => ({
+              title: record.title,
+              description: record.description,
+              image: record.imageUrl,
+              alt: record.imageAlt,
+              price: record.price,
+            }));
+
+          return (
+            <ImageCollection
+              key={collection.type}
+              title={collection.title}
+              description={collection.description}
+              items={items}
+              variant="filmstrip"
+              orderable
+            />
+          );
+        })}
+        {!error && loading && <p className="gallery-status" role="status">Loading traditional art…</p>}
+        {!error && !loading && records.length === 0 && (
+          <p className="gallery-status" role="status">No traditional art is published yet.</p>
+        )}
       </div>
 
       <aside className="editorial-cta">
         <p className="eyebrow">Let’s collaborate</p>
         <h2>Ready to bring your creative ideas to life?</h2>
         <p>
-          Whether you’re interested in custom canvas art, summer camp
-          registration, school project coaching, or wedding mehandi—I’d love to
-          connect.
+          Whether you’re interested in custom canvas art, summer camps,
+          school project coaching, or wedding mehandi—I’d love to connect.
         </p>
         <a className="home-link" href="#say-hello">
           Get in touch <span aria-hidden="true">↗</span>

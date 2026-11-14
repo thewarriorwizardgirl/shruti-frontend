@@ -29,7 +29,7 @@ export default function ContactPage() {
             </span>
             <span>
               <small>Email Studio</small>
-              <strong>projects.twwg@gmail.com</strong>
+              <strong>bansalshruti011@gmail.com</strong>
             </span>
           </a>
         </div>

@@ -1,3 +1,5 @@
+import { getImageUrl } from "../data/imageUrl";
+
 export default function HomePage() {
   return (
     <section className="home-layout" aria-labelledby="studio-title">
@@ -21,7 +23,7 @@ export default function HomePage() {
         <div className="portrait-accent" aria-hidden="true" />
         <img
           className="home-portrait"
-          src="/images/shruti-and-cat.png"
+          src={getImageUrl("/images/shruti-and-cat.png")}
           alt="Shruti holding a ginger cat wearing a handmade crocheted hat"
         />
         <p className="portrait-caption">Making a little magic, every day.</p>

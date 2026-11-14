@@ -1,4 +1,4 @@
-import type { ImageCollectionItem } from "../components/ImageCollection";
+import type { ImageCollectionItem } from "./galleryTypes";
 
 export type ArtworkCollection = {
   id: string;
